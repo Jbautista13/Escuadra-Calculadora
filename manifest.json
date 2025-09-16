@@ -4,8 +4,8 @@
   "description": "Calculadora del Teorema de Pitágoras para el trabajo.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#007bff",
-  "theme_color": "#007bff",
+  "background_color": "#cfdef3",
+  "theme_color": "#cfdef3",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
