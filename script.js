@@ -3,7 +3,6 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     const altitudeInput = document.getElementById('altitude').value;
     const resultElement = document.getElementById('result');
     const copyBtn = document.getElementById('copy-btn');
-    const redirectBtn = document.getElementById('redirect-btn');
 
     const a = parseFloat(baseInput);
     const b = parseFloat(altitudeInput);
@@ -16,7 +15,6 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
         resultElement.textContent = 'Por favor, introduce números positivos válidos para ambos lados.';
         resultElement.style.color = '#dc3545';
         copyBtn.hidden = true;
-        redirectBtn.hidden = true; // Hide redirect button on error
         labelA.textContent = 'a';
         labelB.textContent = 'b';
         labelC.textContent = 'c';
@@ -29,7 +27,6 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     resultElement.style.color = '#28a745';
 
     copyBtn.hidden = false;
-    redirectBtn.hidden = false; // Show redirect button on success
 
     labelA.textContent = `a = ${a.toFixed(2)}`;
     labelB.textContent = `b = ${b.toFixed(2)}`;

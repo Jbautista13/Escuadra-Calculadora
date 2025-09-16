@@ -101,18 +101,14 @@ button:hover {
     margin: 0;
 }
 
-button.copy-button, a.copy-button {
+.copy-button {
     width: auto;
     padding: 8px 15px;
     font-size: 14px;
     background: rgba(0, 123, 255, 0.6);
-    border: none; /* Anchors don't have a border by default, but this adds consistency */
-    border-radius: 12px;
-    text-decoration: none; /* Remove underline from the link */
-    color: white; /* Ensure text color is white */
 }
 
-button.copy-button:hover, a.copy-button:hover {
+.copy-button:hover {
     background: rgba(0, 123, 255, 0.8);
     box-shadow: none;
     transform: none;
