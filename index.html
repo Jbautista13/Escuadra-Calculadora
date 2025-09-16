@@ -7,14 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#007bff">
-</head>
-<body>
+</head><body>
 
     <div class="calculator-container">
         <h1>Calculadora de Escuadra</h1>
         
         <div class="input-group">
-            <label>Base (a):</label>
+            <label>Altura (a):</label>
             <div class="input-row">
                 <input type="number" inputmode="decimal" id="base-ft" placeholder="0">
                 <label for="base-ft">ft</label>
@@ -43,7 +42,7 @@
         </div>
         
         <div class="input-group">
-            <label>Altura (b):</label>
+            <label>Base (b):</label>
             <div class="input-row">
                 <input type="number" inputmode="decimal" id="altitude-ft" placeholder="0">
                 <label for="altitude-ft">ft</label>
@@ -75,6 +74,7 @@
         
         <div class="result-container">
             <p class="result" id="result"></p>
+            <span id="result-inches" class="result-detail"></span>
             <button id="copy-btn" class="copy-button" hidden>Copiar</button>
         </div>
 
