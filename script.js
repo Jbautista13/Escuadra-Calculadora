@@ -1,35 +1,91 @@
+// Function to convert a decimal value (in inches) to a string with feet, inches, and fractions
+function convertToFtInFrac(totalInches) {
+    if (isNaN(totalInches) || totalInches < 0) return 'Error';
+
+    const ft = Math.floor(totalInches / 12);
+    const remainingInches = totalInches % 12;
+    const wholeInches = Math.floor(remainingInches);
+    const fractionalPart = remainingInches - wholeInches;
+
+    const fractions = {
+        '1/16': 0.0625, '1/8': 0.125, '3/16': 0.1875, '1/4': 0.25,
+        '5/16': 0.3125, '3/8': 0.375, '7/16': 0.4375, '1/2': 0.5,
+        '9/16': 0.5625, '5/8': 0.625, '11/16': 0.6875, '3/4': 0.75,
+        '13/16': 0.8125, '7/8': 0.875, '15/16': 0.9375
+    };
+
+    let closestFrac = '';
+    let minDiff = Infinity;
+
+    // Find the closest common fraction
+    if (fractionalPart > 0) {
+        for (const frac in fractions) {
+            const diff = Math.abs(fractions[frac] - fractionalPart);
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestFrac = frac;
+            }
+        }
+    }
+
+    let resultString = '';
+    if (ft > 0) resultString += `${ft}' `;
+    if (wholeInches > 0) resultString += `${wholeInches}" `;
+    if (closestFrac) resultString += `${closestFrac}"`;
+
+    return resultString.trim();
+}
+
+
 document.getElementById('calculate-btn').addEventListener('click', function() {
-    const baseInput = document.getElementById('base').value;
-    const altitudeInput = document.getElementById('altitude').value;
+    const baseFt = parseFloat(document.getElementById('base-ft').value) || 0;
+    const baseIn = parseFloat(document.getElementById('base-in').value) || 0;
+    const baseFrac = parseFloat(document.getElementById('base-frac').value) || 0;
+
+    const altitudeFt = parseFloat(document.getElementById('altitude-ft').value) || 0;
+    const altitudeIn = parseFloat(document.getElementById('altitude-in').value) || 0;
+    const altitudeFrac = parseFloat(document.getElementById('altitude-frac').value) || 0;
+    
     const resultElement = document.getElementById('result');
     const copyBtn = document.getElementById('copy-btn');
+    const labelA = document.getElementById('label-a');
+    const labelB = document.getElementById('label-b');
+    const labelC = document.getElementById('label-c');
 
-    const a = parseFloat(baseInput); // Base
-    const b = parseFloat(altitudeInput); // Altitude
+    // Convert all values to a single unit (inches) for calculation
+    const totalBaseInches = (baseFt * 12) + baseIn + baseFrac;
+    const totalAltitudeInches = (altitudeFt * 12) + altitudeIn + altitudeFrac;
 
-    if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) {
-        resultElement.textContent = 'Por favor, introduce números positivos válidos para ambos lados.';
+    if (totalBaseInches <= 0 || totalAltitudeInches <= 0) {
+        resultElement.textContent = 'Por favor, introduce valores positivos válidos.';
         resultElement.style.color = '#dc3545';
         copyBtn.hidden = true;
-        
-        // Hide and reset labels
-        document.getElementById('label-a').textContent = '';
-        document.getElementById('label-b').textContent = '';
-        document.getElementById('label-c').textContent = '';
-        
+        labelA.textContent = 'a';
+        labelB.textContent = 'b';
+        labelC.textContent = 'c';
         return;
     }
 
-    const hypotenuse = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+    const hypotenuseInches = Math.sqrt(Math.pow(totalBaseInches, 2) + Math.pow(totalAltitudeInches, 2));
 
-    resultElement.textContent = `La hipotenusa (c) es: ${hypotenuse.toFixed(2)}`;
+    const formattedResult = convertToFtInFrac(hypotenuseInches);
+    resultElement.textContent = `La hipotenusa (c) es: ${formattedResult}`;
     resultElement.style.color = '#28a745';
     copyBtn.hidden = false;
 
+    // Update labels with original ft/in/frac values
+    const baseString = convertToFtInFrac(totalBaseInches);
+    const altitudeString = convertToFtInFrac(totalAltitudeInches);
+    
+    labelA.textContent = `a = ${baseString}`;
+    labelB.textContent = `b = ${altitudeString}`;
+    labelC.textContent = `c = ${formattedResult}`;
+
     // Update the triangle visualization
-    updateTriangleVisualization(a, b, hypotenuse);
+    updateTriangleVisualization(totalBaseInches, totalAltitudeInches, hypotenuseInches);
 });
 
+// The visualization logic now works with inches
 function updateTriangleVisualization(base, altitude, hypotenuse = 0) {
     const triangleShape = document.getElementById('triangle-shape');
     const labelA = document.getElementById('label-a');
@@ -38,7 +94,7 @@ function updateTriangleVisualization(base, altitude, hypotenuse = 0) {
 
     const svgWidth = 300;
     const svgHeight = 200;
-    const padding = 50; // Increased padding for labels
+    const padding = 50;
 
     if (base === 0 || altitude === 0) {
         triangleShape.setAttribute('points', `0,${svgHeight} 0,${svgHeight} 0,${svgHeight}`);
@@ -72,31 +128,26 @@ function updateTriangleVisualization(base, altitude, hypotenuse = 0) {
 
     triangleShape.setAttribute('points', `${p1_x},${p1_y} ${p2_x},${p2_y} ${p3_x},${p3_y}`);
 
-    // Position labels relative to SVG boundaries to prevent clipping
-    labelA.textContent = `a = ${base.toFixed(2)}`;
     labelA.setAttribute('x', p1_x + scaledBase / 2);
-    labelA.setAttribute('y', p1_y + 20); // More space below the triangle
+    labelA.setAttribute('y', p1_y + 20);
 
-    labelB.textContent = `b = ${altitude.toFixed(2)}`;
-    labelB.setAttribute('x', p1_x - 15); // Adjust horizontal position
+    labelB.setAttribute('x', p1_x - 15);
     labelB.setAttribute('y', p1_y - scaledAltitude / 2);
-    labelB.setAttribute('text-anchor', 'end'); // Align to the right to prevent clipping
+    labelB.setAttribute('text-anchor', 'end');
 
     if (hypotenuse > 0) {
-        labelC.textContent = `c = ${hypotenuse.toFixed(2)}`;
         const midX_c = (p2_x + p3_x) / 2;
         const midY_c = (p2_y + p3_y) / 2;
 
         const angleRad = Math.atan2(p3_y - p2_y, p3_x - p2_x);
-        const offsetX = Math.cos(angleRad + Math.PI / 2) * 20; // Increased offset
-        const offsetY = Math.sin(angleRad + Math.PI / 2) * 20; // Increased offset
+        const offsetX = Math.cos(angleRad + Math.PI / 2) * 20;
+        const offsetY = Math.sin(angleRad + Math.PI / 2) * 20;
 
         labelC.setAttribute('x', midX_c + offsetX);
         labelC.setAttribute('y', midY_c + offsetY);
-    } else {
-        labelC.textContent = '';
     }
 }
+
 
 document.getElementById('copy-btn').addEventListener('click', function() {
     const resultElement = document.getElementById('result');
@@ -135,7 +186,7 @@ document.getElementById('copy-btn').addEventListener('click', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initial state with a default triangle that fits
-    updateTriangleVisualization(3, 4, 5);
+    updateTriangleVisualization(3 * 12, 4 * 12, 5 * 12);
 });
 
 if ('serviceWorker' in navigator) {

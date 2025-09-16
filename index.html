@@ -12,16 +12,64 @@
 
     <div class="calculator-container">
         <h1>Calculadora de Escuadra</h1>
-        <p>Introduce las longitudes de la base y la altura para encontrar la hipotenusa.</p>
+        <p>Introduce las longitudes de la base y la altura en pies, pulgadas y fracciones.</p>
         
         <div class="input-group">
-            <label for="base">Base (a):</label>
-            <input type="number" inputmode="decimal" id="base" placeholder="Introduce la longitud de la base">
+            <label>Base (a):</label>
+            <div class="input-row">
+                <input type="number" inputmode="decimal" id="base-ft" placeholder="0">
+                <label for="base-ft">ft</label>
+                <input type="number" inputmode="decimal" id="base-in" placeholder="0">
+                <label for="base-in">in</label>
+                <select id="base-frac">
+                    <option value="0">0</option>
+                    <option value="0.0625">1/16</option>
+                    <option value="0.125">1/8</option>
+                    <option value="0.1875">3/16</option>
+                    <option value="0.25">1/4</option>
+                    <option value="0.3125">5/16</option>
+                    <option value="0.375">3/8</option>
+                    <option value="0.4375">7/16</option>
+                    <option value="0.5">1/2</option>
+                    <option value="0.5625">9/16</option>
+                    <option value="0.625">5/8</option>
+                    <option value="0.6875">11/16</option>
+                    <option value="0.75">3/4</option>
+                    <option value="0.8125">13/16</option>
+                    <option value="0.875">7/8</option>
+                    <option value="0.9375">15/16</option>
+                </select>
+                <label for="base-frac">in</label>
+            </div>
         </div>
         
         <div class="input-group">
-            <label for="altitude">Altura (b):</label>
-            <input type="number" inputmode="decimal" id="altitude" placeholder="Introduce la longitud de la altura">
+            <label>Altura (b):</label>
+            <div class="input-row">
+                <input type="number" inputmode="decimal" id="altitude-ft" placeholder="0">
+                <label for="altitude-ft">ft</label>
+                <input type="number" inputmode="decimal" id="altitude-in" placeholder="0">
+                <label for="altitude-in">in</label>
+                <select id="altitude-frac">
+                    <option value="0">0</option>
+                    <option value="0.0625">1/16</option>
+                    <option value="0.125">1/8</option>
+                    <option value="0.1875">3/16</option>
+                    <option value="0.25">1/4</option>
+                    <option value="0.3125">5/16</option>
+                    <option value="0.375">3/8</option>
+                    <option value="0.4375">7/16</option>
+                    <option value="0.5">1/2</option>
+                    <option value="0.5625">9/16</option>
+                    <option value="0.625">5/8</option>
+                    <option value="0.6875">11/16</option>
+                    <option value="0.75">3/4</option>
+                    <option value="0.8125">13/16</option>
+                    <option value="0.875">7/8</option>
+                    <option value="0.9375">15/16</option>
+                </select>
+                <label for="altitude-frac">in</label>
+            </div>
         </div>
         
         <button id="calculate-btn">Calcular Hipotenusa</button>
