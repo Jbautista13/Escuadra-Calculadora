@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Escuadra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>Calculadora de Escuadra</h1>
+        <p>Introduce las longitudes de la base y la altura para encontrar la hipotenusa.</p>
+        
+        <div class="input-group">
+            <label for="base">Base (a):</label>
+            <input type="number" id="base" placeholder="Introduce la longitud de la base">
+        </div>
+        
+        <div class="input-group">
+            <label for="altitude">Altura (b):</label>
+            <input type="number" id="altitude" placeholder="Introduce la longitud de la altura">
+        </div>
+        
+        <button id="calculate-btn">Calcular Hipotenusa</button>
+        
+        <p class="result" id="result"></p>
+
+        <div class="triangle-visualization">
+            <svg id="triangle-svg" width="300" height="200" viewBox="0 0 300 200">
+                <polygon id="triangle-shape" points="20,180 260,180 20,40" fill="#add8e6" stroke="#007bff" stroke-width="2"/>
+                
+                <text id="label-a" x="140" y="195" fill="#333" font-size="16" text-anchor="middle">a</text>
+                <text id="label-b" x="5" y="110" fill="#333" font-size="16" text-anchor="middle">b</text>
+                <text id="label-c" x="140" y="110" fill="#333" font-size="16" text-anchor="middle">c</text>
+            </svg>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
