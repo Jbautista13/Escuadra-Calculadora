@@ -60,10 +60,10 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
         return;
     }
 
-    const hypotenuseInches = Math.sqrt(Math.pow(totalBaseInches, 2) + Math.pow(totalAltitudeInches, 2));
+    const diagonalInches = Math.sqrt(Math.pow(totalBaseInches, 2) + Math.pow(totalAltitudeInches, 2));
 
-    const formattedResult = convertToFtInFrac(hypotenuseInches);
-    resultElement.textContent = `La hipotenusa (c) es: ${formattedResult}`;
+    const formattedResult = convertToFtInFrac(diagonalInches);
+    resultElement.textContent = `La diagonal (c) es: ${formattedResult}`;
     resultElement.style.color = '#28a745';
     copyBtn.hidden = false;
 });
