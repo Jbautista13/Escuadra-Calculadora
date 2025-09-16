@@ -36,6 +36,35 @@ function convertToFtInFrac(totalInches) {
     return resultString.trim();
 }
 
+// Reusable function to handle the copy logic
+function handleCopy(textToCopy, buttonElement) {
+    if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                const originalText = buttonElement.textContent;
+                const originalBackground = buttonElement.style.background;
+                
+                buttonElement.textContent = '¡Copiado!';
+                buttonElement.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    buttonElement.textContent = originalText;
+                    buttonElement.style.background = originalBackground;
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Error al copiar el texto: ', err);
+                const originalText = buttonElement.textContent;
+                buttonElement.textContent = 'Error';
+                buttonElement.style.background = '#dc3545';
+                
+                setTimeout(() => {
+                    buttonElement.textContent = originalText;
+                    buttonElement.style.background = originalBackground;
+                }, 2000);
+            });
+    }
+}
 
 document.getElementById('calculate-btn').addEventListener('click', function() {
     const baseFt = parseFloat(document.getElementById('base-ft').value) || 0;
@@ -48,6 +77,8 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     
     const resultElement = document.getElementById('result');
     const copyBtn = document.getElementById('copy-btn');
+    const historyContainer = document.getElementById('history-container');
+    const historyList = document.getElementById('history-list');
 
     // Convert all values to a single unit (inches) for calculation
     const totalBaseInches = (baseFt * 12) + baseIn + baseFrac;
@@ -66,42 +97,49 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     resultElement.textContent = `La diagonal (c) es: ${formattedResult}`;
     resultElement.style.color = '#28a745';
     copyBtn.hidden = false;
+
+    // Add a new entry to the history
+    const baseString = convertToFtInFrac(totalBaseInches);
+    const altitudeString = convertToFtInFrac(totalAltitudeInches);
+    const historyText = `${baseString} x ${altitudeString} = ${formattedResult}`;
+
+    const newHistoryItem = document.createElement('li');
+    
+    const textSpan = document.createElement('span');
+    textSpan.textContent = historyText;
+    
+    const historyCopyBtn = document.createElement('button');
+    historyCopyBtn.className = 'copy-button';
+    historyCopyBtn.textContent = 'Copiar';
+
+    newHistoryItem.appendChild(textSpan);
+    newHistoryItem.appendChild(historyCopyBtn);
+
+    historyList.prepend(newHistoryItem);
+
+    // Add event listener to the new history button
+    historyCopyBtn.addEventListener('click', function() {
+        const valueToCopy = historyText.split('= ')[1];
+        handleCopy(valueToCopy, historyCopyBtn);
+    });
+
+    // Limit the history to a maximum of 5 items
+    if (historyList.children.length > 5) {
+        historyList.removeChild(historyList.lastChild);
+    }
+    
+    // Show the history container
+    historyContainer.hidden = false;
 });
 
 
+// Main copy button event listener
 document.getElementById('copy-btn').addEventListener('click', function() {
     const resultElement = document.getElementById('result');
     const resultText = resultElement.textContent;
     const copyBtn = document.getElementById('copy-btn');
-
     const valueToCopy = resultText.split(': ')[1];
-
-    if (valueToCopy) {
-        navigator.clipboard.writeText(valueToCopy)
-            .then(() => {
-                const originalText = copyBtn.textContent;
-                const originalBackground = copyBtn.style.background;
-                
-                copyBtn.textContent = '¡Copiado!';
-                copyBtn.style.background = '#28a745';
-                
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.style.background = originalBackground;
-                }, 2000);
-            })
-            .catch(err => {
-                console.error('Error al copiar el texto: ', err);
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Error';
-                copyBtn.style.background = '#dc3545';
-                
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.style.background = originalBackground;
-                }, 2000);
-            });
-    }
+    handleCopy(valueToCopy, copyBtn);
 });
 
 if ('serviceWorker' in navigator) {
