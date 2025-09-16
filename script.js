@@ -78,8 +78,9 @@ function updateTriangleVisualization(base, altitude, hypotenuse = 0) {
     labelA.setAttribute('y', p1_y + 20); // More space below the triangle
 
     labelB.textContent = `b = ${altitude.toFixed(2)}`;
-    labelB.setAttribute('x', p1_x - 30); // More space to the left of the triangle
+    labelB.setAttribute('x', p1_x - 15); // Adjust horizontal position
     labelB.setAttribute('y', p1_y - scaledAltitude / 2);
+    labelB.setAttribute('text-anchor', 'end'); // Align to the right to prevent clipping
 
     if (hypotenuse > 0) {
         labelC.textContent = `c = ${hypotenuse.toFixed(2)}`;
