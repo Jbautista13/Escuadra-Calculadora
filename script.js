@@ -48,9 +48,6 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     
     const resultElement = document.getElementById('result');
     const copyBtn = document.getElementById('copy-btn');
-    const labelA = document.getElementById('label-a');
-    const labelB = document.getElementById('label-b');
-    const labelC = document.getElementById('label-c');
 
     // Convert all values to a single unit (inches) for calculation
     const totalBaseInches = (baseFt * 12) + baseIn + baseFrac;
@@ -60,9 +57,6 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
         resultElement.textContent = 'Por favor, introduce valores positivos válidos.';
         resultElement.style.color = '#dc3545';
         copyBtn.hidden = true;
-        labelA.textContent = 'a';
-        labelB.textContent = 'b';
-        labelC.textContent = 'c';
         return;
     }
 
@@ -72,81 +66,7 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     resultElement.textContent = `La hipotenusa (c) es: ${formattedResult}`;
     resultElement.style.color = '#28a745';
     copyBtn.hidden = false;
-
-    // Update labels with original ft/in/frac values
-    const baseString = convertToFtInFrac(totalBaseInches);
-    const altitudeString = convertToFtInFrac(totalAltitudeInches);
-    
-    labelA.textContent = `a = ${baseString}`;
-    labelB.textContent = `b = ${altitudeString}`;
-    labelC.textContent = `c = ${formattedResult}`;
-
-    // Update the triangle visualization
-    updateTriangleVisualization(totalBaseInches, totalAltitudeInches, hypotenuseInches);
 });
-
-// The visualization logic now works with inches
-function updateTriangleVisualization(base, altitude, hypotenuse = 0) {
-    const triangleShape = document.getElementById('triangle-shape');
-    const labelA = document.getElementById('label-a');
-    const labelB = document.getElementById('label-b');
-    const labelC = document.getElementById('label-c');
-
-    const svgWidth = 300;
-    const svgHeight = 200;
-    const padding = 50;
-
-    if (base === 0 || altitude === 0) {
-        triangleShape.setAttribute('points', `0,${svgHeight} 0,${svgHeight} 0,${svgHeight}`);
-        labelA.textContent = '';
-        labelB.textContent = '';
-        labelC.textContent = '';
-        return;
-    }
-
-    const maxDimension = Math.max(base, altitude);
-    let scaleFactor = 1;
-    if (maxDimension > 0) {
-        const availableWidth = svgWidth - 2 * padding;
-        const availableHeight = svgHeight - 2 * padding;
-        scaleFactor = Math.min(availableWidth / base, availableHeight / altitude);
-        if (scaleFactor > 20) scaleFactor = 20;
-        if (scaleFactor < 0.1) scaleFactor = 0.1;
-    }
-
-    const scaledBase = base * scaleFactor;
-    const scaledAltitude = altitude * scaleFactor;
-
-    const p1_x = padding;
-    const p1_y = svgHeight - padding;
-
-    const p2_x = padding + scaledBase;
-    const p2_y = svgHeight - padding;
-
-    const p3_x = padding;
-    const p3_y = svgHeight - padding - scaledAltitude;
-
-    triangleShape.setAttribute('points', `${p1_x},${p1_y} ${p2_x},${p2_y} ${p3_x},${p3_y}`);
-
-    labelA.setAttribute('x', p1_x + scaledBase / 2);
-    labelA.setAttribute('y', p1_y + 20);
-
-    labelB.setAttribute('x', p1_x - 15);
-    labelB.setAttribute('y', p1_y - scaledAltitude / 2);
-    labelB.setAttribute('text-anchor', 'end');
-
-    if (hypotenuse > 0) {
-        const midX_c = (p2_x + p3_x) / 2;
-        const midY_c = (p2_y + p3_y) / 2;
-
-        const angleRad = Math.atan2(p3_y - p2_y, p3_x - p2_x);
-        const offsetX = Math.cos(angleRad + Math.PI / 2) * 20;
-        const offsetY = Math.sin(angleRad + Math.PI / 2) * 20;
-
-        labelC.setAttribute('x', midX_c + offsetX);
-        labelC.setAttribute('y', midY_c + offsetY);
-    }
-}
 
 
 document.getElementById('copy-btn').addEventListener('click', function() {
@@ -182,11 +102,6 @@ document.getElementById('copy-btn').addEventListener('click', function() {
                 }, 2000);
             });
     }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initial state with a default triangle that fits
-    updateTriangleVisualization(3 * 12, 4 * 12, 5 * 12);
 });
 
 if ('serviceWorker' in navigator) {

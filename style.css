@@ -136,22 +136,3 @@ button:hover {
     box-shadow: none;
     transform: none;
 }
-
-.triangle-visualization {
-    margin-top: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-#triangle-svg {
-    border: none;
-    max-width: 100%;
-    height: auto;
-}
