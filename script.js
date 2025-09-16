@@ -66,6 +66,59 @@ function handleCopy(textToCopy, buttonElement) {
     }
 }
 
+// Global variables to hold the last calculated values
+let lastBaseInches = 0;
+let lastAltitudeInches = 0;
+let lastDiagonalInches = 0;
+
+
+// Function to add the last result to the history list
+function addResultToHistory() {
+    if (lastDiagonalInches > 0) {
+        const historyContainer = document.getElementById('history-container');
+        const historyList = document.getElementById('history-list');
+
+        const baseString = convertToFtInFrac(lastBaseInches);
+        const altitudeString = convertToFtInFrac(lastAltitudeInches);
+        const formattedResult = convertToFtInFrac(lastDiagonalInches);
+        const historyText = `${baseString} x ${altitudeString} = ${formattedResult}`;
+    
+        const newHistoryItem = document.createElement('li');
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = historyText;
+        
+        const historyCopyBtn = document.createElement('button');
+        historyCopyBtn.className = 'copy-button';
+        historyCopyBtn.textContent = 'Copiar';
+    
+        newHistoryItem.appendChild(textSpan);
+        newHistoryItem.appendChild(historyCopyBtn);
+    
+        historyList.prepend(newHistoryItem);
+    
+        // Add event listener to the new history button
+        historyCopyBtn.addEventListener('click', function() {
+            const valueToCopy = historyText.split('= ')[1];
+            handleCopy(valueToCopy, historyCopyBtn);
+        });
+    
+        // Limit the history to a maximum of 5 items
+        if (historyList.children.length > 5) {
+            historyList.removeChild(historyList.lastChild);
+        }
+        
+        // Show the history container
+        historyContainer.hidden = false;
+        
+        // Reset last calculated values
+        lastBaseInches = 0;
+        lastAltitudeInches = 0;
+        lastDiagonalInches = 0;
+    }
+}
+
+
 document.getElementById('calculate-btn').addEventListener('click', function() {
     const baseFt = parseFloat(document.getElementById('base-ft').value) || 0;
     const baseIn = parseFloat(document.getElementById('base-in').value) || 0;
@@ -77,8 +130,9 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     
     const resultElement = document.getElementById('result');
     const copyBtn = document.getElementById('copy-btn');
-    const historyContainer = document.getElementById('history-container');
-    const historyList = document.getElementById('history-list');
+
+    // Add previous result to history before calculating a new one
+    addResultToHistory();
 
     // Convert all values to a single unit (inches) for calculation
     const totalBaseInches = (baseFt * 12) + baseIn + baseFrac;
@@ -98,38 +152,10 @@ document.getElementById('calculate-btn').addEventListener('click', function() {
     resultElement.style.color = '#28a745';
     copyBtn.hidden = false;
 
-    // Add a new entry to the history
-    const baseString = convertToFtInFrac(totalBaseInches);
-    const altitudeString = convertToFtInFrac(totalAltitudeInches);
-    const historyText = `${baseString} x ${altitudeString} = ${formattedResult}`;
-
-    const newHistoryItem = document.createElement('li');
-    
-    const textSpan = document.createElement('span');
-    textSpan.textContent = historyText;
-    
-    const historyCopyBtn = document.createElement('button');
-    historyCopyBtn.className = 'copy-button';
-    historyCopyBtn.textContent = 'Copiar';
-
-    newHistoryItem.appendChild(textSpan);
-    newHistoryItem.appendChild(historyCopyBtn);
-
-    historyList.prepend(newHistoryItem);
-
-    // Add event listener to the new history button
-    historyCopyBtn.addEventListener('click', function() {
-        const valueToCopy = historyText.split('= ')[1];
-        handleCopy(valueToCopy, historyCopyBtn);
-    });
-
-    // Limit the history to a maximum of 5 items
-    if (historyList.children.length > 5) {
-        historyList.removeChild(historyList.lastChild);
-    }
-    
-    // Show the history container
-    historyContainer.hidden = false;
+    // Store the last calculated values
+    lastBaseInches = totalBaseInches;
+    lastAltitudeInches = totalAltitudeInches;
+    lastDiagonalInches = diagonalInches;
 });
 
 
@@ -140,6 +166,22 @@ document.getElementById('copy-btn').addEventListener('click', function() {
     const copyBtn = document.getElementById('copy-btn');
     const valueToCopy = resultText.split(': ')[1];
     handleCopy(valueToCopy, copyBtn);
+});
+
+
+// Event listeners to clear the result text on input change
+const inputs = document.querySelectorAll('.input-row input, .input-row select');
+inputs.forEach(input => {
+    input.addEventListener('input', function() {
+        const resultElement = document.getElementById('result');
+        const copyBtn = document.getElementById('copy-btn');
+        
+        if (resultElement.textContent !== '') {
+            addResultToHistory();
+            resultElement.textContent = '';
+            copyBtn.hidden = true;
+        }
+    });
 });
 
 if ('serviceWorker' in navigator) {
